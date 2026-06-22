@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday 🎂</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#ff9a9e,#fad0c4,#fbc2eb);
+    overflow:hidden;
+    text-align:center;
+}
+
+.container{
+    position:relative;
+    z-index:10;
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(10px);
+    padding:30px;
+    border-radius:25px;
+    width:90%;
+    max-width:500px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+h1{
+    color:white;
+    font-size:3rem;
+    animation:bounce 2s infinite;
+}
+
+.message{
+    color:white;
+    font-size:1.2rem;
+    margin:20px 0;
+    line-height:1.6;
+}
+
+.cake{
+    font-size:80px;
+    animation:float 3s ease-in-out infinite;
+}
+
+button{
+    margin-top:20px;
+    padding:12px 25px;
+    border:none;
+    border-radius:50px;
+    background:#ff4081;
+    color:white;
+    font-size:1rem;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.1);
+}
+
+@keyframes bounce{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-10px);}
+}
+
+@keyframes float{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-15px);}
+}
+
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+}
+
+@media (max-width:600px){
+    h1{
+        font-size:2.2rem;
+    }
+
+    .message{
+        font-size:1rem;
+    }
+
+    .cake{
+        font-size:60px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="container">
+    <div class="cake">🎂</div>
+
+    <h1>Happy Birthday!</h1>
+
+    <p class="message">
+        Wishing you a day filled with happiness, laughter,
+        love, and unforgettable memories. May all your dreams
+        come true and may this year bring endless success and joy!
+        🎉🎁🎈
+    </p>
+
+    <button onclick="showWish()">Click for Surprise ✨</button>
+</div>
+
+<script>
+function showWish(){
+    alert("🎉 Happy Birthday! May your special day be as wonderful as you are! 🎂✨");
+}
+
+// Confetti Animation
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+
+function resizeCanvas(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+const confetti = [];
+
+for(let i=0;i<200;i++){
+    confetti.push({
+        x: Math.random()*canvas.width,
+        y: Math.random()*canvas.height,
+        r: Math.random()*6+2,
+        d: Math.random()*200,
+        color:`hsl(${Math.random()*360},100%,50%)`,
+        tilt:Math.random()*10-10
+    });
+}
+
+function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    confetti.forEach(c=>{
+        ctx.beginPath();
+        ctx.lineWidth=c.r;
+        ctx.strokeStyle=c.color;
+        ctx.moveTo(c.x+c.tilt,c.y);
+        ctx.lineTo(c.x,c.y+c.tilt+5);
+        ctx.stroke();
+    });
+
+    update();
+}
+
+let angle=0;
+
+function update(){
+    angle+=0.01;
+
+    confetti.forEach((c,i)=>{
+        c.y += (Math.cos(angle+c.d)+3+c.r/2)/2;
+        c.x += Math.sin(angle);
+
+        if(c.y > canvas.height){
+            confetti[i]={
+                x:Math.random()*canvas.width,
+                y:-10,
+                r:c.r,
+                d:c.d,
+                color:c.color,
+                tilt:c.tilt
+            };
+        }
+    });
+}
+
+setInterval(draw,20);
+</script>
+
+</body>
+</html>
